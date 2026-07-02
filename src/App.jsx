@@ -1,60 +1,42 @@
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
+import Layout from "./layouts/Layout";
+
+import Dashboard from "./pages/Dashboard";
+import Aves from "./pages/Aves";
+import Medicamentos from "./pages/Medicamentos";
+import Doencas from "./pages/Doencas";
+import Tratamentos from "./pages/Tratamentos";
+import Agenda from "./pages/Agenda";
+import Relatorios from "./pages/Relatorios";
+import Configuracoes from "./pages/Configuracoes";
+
+export default function App() {
   return (
-    <div className="app">
-      <aside className="sidebar">
-        <h2>🐦 AviMed</h2>
+    <BrowserRouter>
+      <Routes>
 
-        <nav>
-          <a href="#">🏠 Dashboard</a>
-          <a href="#">🐦 Aves</a>
-          <a href="#">💊 Medicamentos</a>
-          <a href="#">🦠 Doenças</a>
-          <a href="#">💉 Tratamentos</a>
-          <a href="#">📊 Relatórios</a>
-          <a href="#">⚙️ Configurações</a>
-        </nav>
-      </aside>
+        <Route path="/" element={<Layout />}>
 
-      <main className="content">
-        <header>
-          <h1>Dashboard</h1>
-          <p>Bem-vindo ao AviMed.</p>
-        </header>
+          <Route index element={<Dashboard />} />
 
-        <div className="cards">
-          <div className="card">
-            <h3>🐦 Aves</h3>
-            <h2>0</h2>
-          </div>
+          <Route path="aves" element={<Aves />} />
 
-          <div className="card">
-            <h3>💊 Medicamentos</h3>
-            <h2>0</h2>
-          </div>
+          <Route path="medicamentos" element={<Medicamentos />} />
 
-          <div className="card">
-            <h3>🦠 Doenças</h3>
-            <h2>0</h2>
-          </div>
+          <Route path="doencas" element={<Doencas />} />
 
-          <div className="card">
-            <h3>💉 Tratamentos</h3>
-            <h2>0</h2>
-          </div>
-        </div>
+          <Route path="tratamentos" element={<Tratamentos />} />
 
-        <div className="pesquisa">
-          <input
-            type="text"
-            placeholder="Pesquisar ave, doença ou medicamento..."
-          />
-          <button>Pesquisar</button>
-        </div>
-      </main>
-    </div>
+          <Route path="agenda" element={<Agenda />} />
+
+          <Route path="relatorios" element={<Relatorios />} />
+
+          <Route path="configuracoes" element={<Configuracoes />} />
+
+        </Route>
+
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
