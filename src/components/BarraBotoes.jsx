@@ -1,16 +1,23 @@
 import { Stack, Button } from "@mui/material";
+
 import AddIcon from "@mui/icons-material/Add";
 import SaveIcon from "@mui/icons-material/Save";
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function BarraBotoes({
   onNovo,
   onSalvar,
+  onEditar,
   onExcluir,
-  editando = false,
 }) {
   return (
-    <Stack direction="row" spacing={2} sx={{ mt: 2, mb: 2 }}>
+    <Stack
+      direction="row"
+      spacing={2}
+      justifyContent="center"
+      sx={{ mt: 3 }}
+    >
       <Button
         variant="contained"
         color="primary"
@@ -26,7 +33,16 @@ export default function BarraBotoes({
         startIcon={<SaveIcon />}
         onClick={onSalvar}
       >
-        {editando ? "Atualizar" : "Salvar"}
+        Salvar
+      </Button>
+
+      <Button
+        variant="contained"
+        color="warning"
+        startIcon={<EditIcon />}
+        onClick={onEditar}
+      >
+        Alterar
       </Button>
 
       <Button
@@ -34,7 +50,6 @@ export default function BarraBotoes({
         color="error"
         startIcon={<DeleteIcon />}
         onClick={onExcluir}
-        disabled={!editando}
       >
         Excluir
       </Button>
