@@ -1,10 +1,40 @@
-import Layout from "./layouts/Layout";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+
+import Login from "./pages/Login";
 import Doencas from "./pages/Doencas";
+
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 export default function App() {
   return (
-    <Layout>
-      <Doencas />
-    </Layout>
+    <BrowserRouter>
+      <Routes>
+
+        <Route
+          path="/"
+          element={<Navigate to="/doencas" replace />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/doencas"
+          element={
+            <ProtectedRoute>
+              <Doencas />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+
+      </Routes>
+    </BrowserRouter>
   );
 }

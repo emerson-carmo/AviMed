@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   Box,
   Typography,
@@ -8,31 +10,103 @@ import {
 } from "@mui/material";
 
 import BarraBotoes from "../components/BarraBotoes";
+import TabelaDoencas from "../components/TabelaDoencas";
+import useDoencas from "../hooks/useDoencas";
 
 export default function Doencas() {
+  const { doencas, salvar, excluir } = useDoencas();
+
+  const [id, setId] = useState(null);
+
+  const [formulario, setFormulario] = useState({
+    nome: "",
+    sintomas: "",
+    medicamento: "",
+    dosagem: "",
+    periodo_tratamento: "",
+  });
+
+  function alterarCampo(e) {
+    setFormulario({
+      ...formulario,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  function novoCadastro() {
+    setId(null);
+
+    setFormulario({
+      nome: "",
+      sintomas: "",
+      medicamento: "",
+      dosagem: "",
+      periodo_tratamento: "",
+    });
+  }
+
+  async function salvarCadastro() {
+    if (!formulario.nome.trim()) {
+      alert("Informe o nome da doença.");
+      return;
+    }
+
+    const sucesso = await salvar(id, formulario);
+
+    if (sucesso) {
+      alert("Cadastro salvo com sucesso!");
+
+      novoCadastro();
+    }
+  }
+
+  function editarCadastro(item) {
+    setId(item.id);
+
+    setFormulario({
+      nome: item.nome || "",
+      sintomas: item.sintomas || "",
+      medicamento: item.medicamento || "",
+      dosagem: item.dosagem || "",
+      periodo_tratamento: item.periodo_tratamento || "",
+    });
+  }
+
+  async function excluirCadastro(id) {
+    if (!window.confirm("Deseja realmente excluir esta doença?")) {
+      return;
+    }
+
+    const sucesso = await excluir(id);
+
+    if (sucesso) {
+      alert("Cadastro excluído com sucesso!");
+
+      novoCadastro();
+    }
+  }
+
   return (
     <Box
       sx={{
-        maxWidth: 1000,
+        maxWidth: 1100,
         mx: "auto",
-        py: 3,
+        py: 4,
       }}
     >
       <Typography
         variant="h3"
+        color="primary"
         fontWeight="bold"
         textAlign="center"
-        color="primary"
-        gutterBottom
       >
         Cadastro de Doenças
       </Typography>
 
       <Typography
-        variant="body1"
+        align="center"
         color="text.secondary"
-        textAlign="center"
-        mb={3}
+        mb={4}
       >
         Cadastro, consulta e gerenciamento das doenças do plantel.
       </Typography>
@@ -45,16 +119,13 @@ export default function Doencas() {
         }}
       >
         <Grid container spacing={3}>
-          <Grid size={{ xs: 12, md: 7 }}>
+
+          <Grid size={12}>
             <TextField
               label="Nome da doença"
-              fullWidth
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 5 }}>
-            <TextField
-              label="Categoria"
+              name="nome"
+              value={formulario.nome}
+              onChange={alterarCampo}
               fullWidth
             />
           </Grid>
@@ -62,80 +133,66 @@ export default function Doencas() {
           <Grid size={12}>
             <TextField
               label="Sintomas"
+              name="sintomas"
+              value={formulario.sintomas}
+              onChange={alterarCampo}
               multiline
-              rows={3}
+              rows={4}
               fullWidth
             />
           </Grid>
 
-          <Grid size={12}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <TextField
-              label="Diagnóstico"
-              multiline
-              rows={3}
+              label="Medicamento indicado"
+              name="medicamento"
+              value={formulario.medicamento}
+              onChange={alterarCampo}
               fullWidth
             />
           </Grid>
 
-          <Grid size={12}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <TextField
-              label="Prevenção"
-              multiline
-              rows={3}
+              label="Dosagem"
+              name="dosagem"
+              value={formulario.dosagem}
+              onChange={alterarCampo}
               fullWidth
             />
           </Grid>
 
-          <Grid size={12}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <TextField
-              label="Observações"
-              multiline
-              rows={3}
+              label="Período de tratamento"
+              name="periodo_tratamento"
+              value={formulario.periodo_tratamento}
+              onChange={alterarCampo}
               fullWidth
             />
           </Grid>
 
           <Grid size={12}>
-            <Divider sx={{ my: 1 }} />
+            <Divider />
           </Grid>
 
           <Grid size={12}>
             <BarraBotoes
-              onNovo={() => console.log("Novo")}
-              onSalvar={() => console.log("Salvar")}
-              onEditar={() => console.log("Alterar")}
-              onExcluir={() => console.log("Excluir")}
+              onNovo={novoCadastro}
+              onSalvar={salvarCadastro}
+              onEditar={() => {}}
+              onExcluir={() => {}}
             />
           </Grid>
+
         </Grid>
       </Paper>
 
-      <Paper
-        elevation={3}
-        sx={{
-          mt: 4,
-          p: 3,
-          borderRadius: 3,
-        }}
-      >
-        <Typography
-          variant="h5"
-          fontWeight="bold"
-          textAlign="center"
-          gutterBottom
-        >
-          Doenças cadastradas
-        </Typography>
-
-        <Divider sx={{ mb: 2 }} />
-
-        <Typography
-          align="center"
-          color="text.secondary"
-        >
-          Nenhuma doença cadastrada.
-        </Typography>
-      </Paper>
+      <TabelaDoencas
+        doencas={doencas}
+        onEditar={editarCadastro}
+        onExcluir={excluirCadastro}
+      />
     </Box>
   );
 }
