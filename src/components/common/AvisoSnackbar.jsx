@@ -17,10 +17,12 @@ export default function AvisoSnackbar({
       }}
     >
       <Alert
-        onClose={onClose}
         severity={severidade}
         variant="filled"
-        sx={{ width: "100%" }}
+        onClose={onClose}
+        sx={{
+          width: "100%",
+        }}
       >
         {mensagem}
       </Alert>

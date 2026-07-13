@@ -10,14 +10,18 @@ import {
 export default function ConfirmDialog({
   open,
   titulo = "Confirmação",
-  mensagem = "Deseja continuar?",
-  onCancelar,
-  onConfirmar,
+  mensagem = "Deseja realmente realizar esta operação?",
+  textoConfirmar = "Confirmar",
+  textoCancelar = "Cancelar",
+  corBotao = "error",
+  loading = false,
+  onConfirm,
+  onCancel,
 }) {
   return (
     <Dialog
       open={open}
-      onClose={onCancelar}
+      onClose={!loading ? onCancel : undefined}
       maxWidth="xs"
       fullWidth
     >
@@ -29,20 +33,22 @@ export default function ConfirmDialog({
         </DialogContentText>
       </DialogContent>
 
-      <DialogActions sx={{ p: 2 }}>
+      <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button
-          variant="outlined"
-          onClick={onCancelar}
+          onClick={onCancel}
+          disabled={loading}
         >
-          Cancelar
+          {textoCancelar}
         </Button>
 
         <Button
           variant="contained"
-          color="error"
-          onClick={onConfirmar}
+          color={corBotao}
+          onClick={onConfirm}
+          disabled={loading}
+          autoFocus
         >
-          Excluir
+          {textoConfirmar}
         </Button>
       </DialogActions>
     </Dialog>

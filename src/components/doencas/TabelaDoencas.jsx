@@ -6,6 +6,7 @@ import {
   Typography,
   TextField,
   InputAdornment,
+  Chip,
   IconButton,
   Tooltip,
 } from "@mui/material";
@@ -13,6 +14,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import { DataGrid } from "@mui/x-data-grid";
 
@@ -26,13 +28,21 @@ export default function TabelaDoencas({
 
   const linhas = useMemo(() => {
 
-    return doencas.filter((item) =>
+    return doencas.filter((item) => {
 
-      item.nome
-        ?.toLowerCase()
-        .includes(pesquisa.toLowerCase())
+      const texto = pesquisa.toLowerCase();
 
-    );
+      return (
+
+        item.nome?.toLowerCase().includes(texto) ||
+
+        item.categoria?.toLowerCase().includes(texto) ||
+
+        item.medicamento?.toLowerCase().includes(texto)
+
+      );
+
+    });
 
   }, [doencas, pesquisa]);
 
@@ -45,6 +55,12 @@ export default function TabelaDoencas({
     },
 
     {
+      field: "categoria",
+      headerName: "Categoria",
+      width: 150,
+    },
+
+    {
       field: "medicamento",
       headerName: "Medicamento",
       flex: 2,
@@ -53,32 +69,68 @@ export default function TabelaDoencas({
     {
       field: "dosagem",
       headerName: "Dosagem",
-      width: 130,
+      width: 120,
     },
 
     {
-      field: "periodo_tratamento",
+      field: "periodo",
       headerName: "Período",
-      width: 140,
+      width: 120,
+    },
+
+    {
+      field: "status",
+      headerName: "Status",
+      width: 120,
+
+      renderCell: ({ value }) => (
+
+        <Chip
+
+          size="small"
+
+          color={value === "ATIVA" ? "success" : "default"}
+
+          label={value || "ATIVA"}
+
+        />
+
+      ),
+
     },
 
     {
       field: "acoes",
       headerName: "Ações",
-      width: 120,
+      width: 160,
       sortable: false,
 
-      renderCell: (params) => (
+      renderCell: ({ row }) => (
 
         <>
+
+          <Tooltip title="Visualizar">
+
+            <IconButton color="primary">
+
+              <VisibilityIcon />
+
+            </IconButton>
+
+          </Tooltip>
 
           <Tooltip title="Editar">
 
             <IconButton
+
               color="warning"
-              onClick={() => onEditar(params.row)}
+
+              onClick={() => onEditar(row)}
+
             >
+
               <EditIcon />
+
             </IconButton>
 
           </Tooltip>
@@ -86,10 +138,15 @@ export default function TabelaDoencas({
           <Tooltip title="Excluir">
 
             <IconButton
+
               color="error"
-              onClick={() => onExcluir(params.row.id)}
+
+              onClick={() => onExcluir(row.id)}
+
             >
+
               <DeleteIcon />
+
             </IconButton>
 
           </Tooltip>
@@ -105,40 +162,64 @@ export default function TabelaDoencas({
   return (
 
     <Paper
-      elevation={4}
+
+      elevation={3}
+
       sx={{
-        mt: 4,
-        borderRadius: 3,
+
+        mt: 3,
+
         p: 3,
+
+        borderRadius: 2,
+
       }}
+
     >
 
       <Typography
-        variant="h5"
+
+        variant="h6"
+
         fontWeight="bold"
-        color="primary"
+
         mb={2}
+
       >
-        Doenças cadastradas
+
+        Doenças Cadastradas
+
       </Typography>
 
       <TextField
+
         fullWidth
-        placeholder="Pesquisar doença..."
+
+        placeholder="Pesquisar..."
+
         value={pesquisa}
+
         onChange={(e) => setPesquisa(e.target.value)}
+
         sx={{ mb: 2 }}
 
         InputProps={{
+
           startAdornment: (
+
             <InputAdornment position="start">
+
               <SearchIcon />
+
             </InputAdornment>
+
           ),
+
         }}
+
       />
 
-      <Box sx={{ height: 500 }}>
+      <Box sx={{ height: 520 }}>
 
         <DataGrid
 
@@ -146,21 +227,28 @@ export default function TabelaDoencas({
 
           columns={colunas}
 
-          pageSizeOptions={[5,10,20,50]}
+          pageSizeOptions={[10, 20, 50]}
 
           initialState={{
+
             pagination: {
+
               paginationModel: {
+
                 pageSize: 10,
+
               },
+
             },
+
           }}
 
           disableRowSelectionOnClick
 
           localeText={{
+
             noRowsLabel: "Nenhuma doença cadastrada",
-            footerRowSelected: () => "",
+
           }}
 
         />

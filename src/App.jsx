@@ -5,6 +5,8 @@ import Doencas from "./pages/Doencas";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 
+import MainLayout from "./layouts/MainLayout";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -24,7 +26,9 @@ export default function App() {
           path="/doencas"
           element={
             <ProtectedRoute>
-              <Doencas />
+              <MainLayout>
+                <Doencas />
+              </MainLayout>
             </ProtectedRoute>
           }
         />
