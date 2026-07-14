@@ -1,29 +1,64 @@
-import { Card,CardContent,Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+} from "@mui/material";
 
-export default function DashboardCard({titulo,valor}){
+export default function DashboardCard({
+  titulo,
+  valor,
+  icone,
+  cor = "primary.main",
+}) {
+  return (
+    <Card
+      elevation={4}
+      sx={{
+        borderRadius: 3,
+        height: "100%",
+        transition: "0.2s",
+        "&:hover": {
+          transform: "translateY(-3px)",
+          boxShadow: 8,
+        },
+      }}
+    >
+      <CardContent>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Box>
 
-return(
+            <Typography
+              variant="body2"
+              color="text.secondary"
+            >
+              {titulo}
+            </Typography>
 
-<Card>
+            <Typography
+              variant="h3"
+              fontWeight="bold"
+              color={cor}
+            >
+              {valor}
+            </Typography>
 
-<CardContent>
+          </Box>
 
-<Typography>
+          <Typography
+            sx={{
+              fontSize: 42,
+            }}
+          >
+            {icone}
+          </Typography>
 
-{titulo}
-
-</Typography>
-
-<Typography variant="h4">
-
-{valor}
-
-</Typography>
-
-</CardContent>
-
-</Card>
-
-);
-
+        </Box>
+      </CardContent>
+    </Card>
+  );
 }

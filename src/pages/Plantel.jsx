@@ -1,149 +1,213 @@
+import { useState } from "react";
+
 import {
   Box,
-  Paper,
   Typography,
-  TextField,
   Grid,
-  Button,
-  MenuItem
 } from "@mui/material";
 
+import usePlantel from "../hooks/usePlantel";
+
+import FormularioAve from "../components/plantel/FormularioAve";
+import TabelaPlantel from "../components/plantel/TabelaPlantel";
+
+import BarraBotoes from "../components/common/BarraBotoes";
+import CardResumo from "../components/common/CardResumo";
+import AvisoSnackbar from "../components/common/AvisoSnackbar";
+import ConfirmDialog from "../components/common/ConfirmDialog";
+
 export default function Plantel() {
+
+  const {
+    aves,
+    dados,
+    setDados,
+    salvar,
+    excluir,
+    editar,
+    limpar,
+  } = usePlantel();
+
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    mensagem: "",
+    severidade: "success",
+  });
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const [idExcluir, setIdExcluir] = useState(null);
+
+  async function salvarCadastro() {
+
+    if (!dados.nome.trim()) {
+
+      setSnackbar({
+        open: true,
+        mensagem: "Informe o nome da ave.",
+        severidade: "warning",
+      });
+
+      return;
+    }
+
+    const sucesso = await salvar();
+
+    if (sucesso) {
+
+      setSnackbar({
+        open: true,
+        mensagem: "Cadastro salvo com sucesso.",
+        severidade: "success",
+      });
+
+    }
+
+  }
+
+  function solicitarExclusao(id) {
+
+    setIdExcluir(id);
+
+    setDialogOpen(true);
+
+  }
+
+  async function confirmarExclusao() {
+
+    const sucesso = await excluir(idExcluir);
+
+    if (sucesso) {
+
+      setSnackbar({
+        open: true,
+        mensagem: "Cadastro excluído.",
+        severidade: "success",
+      });
+
+    }
+
+    setDialogOpen(false);
+
+    setIdExcluir(null);
+
+  }
+
   return (
-    <Box p={3}>
 
-      <Typography variant="h4" fontWeight="bold" gutterBottom>
-        Cadastro de Aves
+    <Box>
+
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        mb={3}
+      >
+        🐦 Plantel
       </Typography>
 
-      <Typography color="text.secondary" mb={3}>
-        Gerencie todo o plantel do AviMed.
-      </Typography>
+      <Grid
+        container
+        spacing={2}
+        mb={3}
+      >
 
-      <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+        <Grid size={{ xs:12, md:4 }}>
 
-        <Grid container spacing={2}>
-
-          <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              label="Número da Anilha"
-            />
-          </Grid>
-
-          <Grid item xs={12} md={8}>
-            <TextField
-              fullWidth
-              label="Nome"
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Espécie"
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Raça"
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <TextField
-              select
-              fullWidth
-              label="Sexo"
-            >
-              <MenuItem value="M">Macho</MenuItem>
-              <MenuItem value="F">Fêmea</MenuItem>
-            </TextField>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              label="Cor"
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              type="date"
-              label="Nascimento"
-              InputLabelProps={{ shrink: true }}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Pai"
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Mãe"
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              fullWidth
-              label="Viveiro"
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <TextField
-              select
-              fullWidth
-              label="Situação"
-            >
-              <MenuItem value="Ativa">Ativa</MenuItem>
-              <MenuItem value="Vendida">Vendida</MenuItem>
-              <MenuItem value="Óbito">Óbito</MenuItem>
-            </TextField>
-          </Grid>
-
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              label="Observações"
-            />
-          </Grid>
+          <CardResumo
+            titulo="Total de Aves"
+            valor={aves.length}
+            icone="🐦"
+          />
 
         </Grid>
 
-        <Box
-          mt={4}
-          display="flex"
-          gap={2}
-        >
-          <Button
-            variant="contained"
-            color="success"
-          >
-            Salvar
-          </Button>
+        <Grid size={{ xs:12, md:4 }}>
 
-          <Button
-            variant="outlined"
-          >
-            Cancelar
-          </Button>
-        </Box>
+          <CardResumo
+            titulo="Ativas"
+            valor={aves.filter(a => a.status === "ATIVA").length}
+            icone="🟢"
+          />
 
-      </Paper>
+        </Grid>
+
+        <Grid size={{ xs:12, md:4 }}>
+
+          <CardResumo
+            titulo="Vendidas / Óbito"
+            valor={aves.filter(a => a.status !== "ATIVA").length}
+            icone="📦"
+          />
+
+        </Grid>
+
+      </Grid>
+
+      <FormularioAve
+
+        dados={dados}
+
+        setDados={setDados}
+
+      />
+
+      <BarraBotoes
+
+        onNovo={limpar}
+
+        onSalvar={salvarCadastro}
+
+        onEditar={() => {}}
+
+        onExcluir={() => solicitarExclusao(dados.id)}
+
+      />
+
+      <TabelaPlantel
+
+        aves={aves}
+
+        onEditar={editar}
+
+        onExcluir={solicitarExclusao}
+
+      />
+
+      <AvisoSnackbar
+
+        open={snackbar.open}
+
+        mensagem={snackbar.mensagem}
+
+        severidade={snackbar.severidade}
+
+        onClose={() =>
+          setSnackbar({
+            ...snackbar,
+            open: false,
+          })
+        }
+
+      />
+
+      <ConfirmDialog
+
+        open={dialogOpen}
+
+        titulo="Excluir Ave"
+
+        mensagem="Deseja realmente excluir este cadastro?"
+
+        textoConfirmar="Excluir"
+
+        onConfirm={confirmarExclusao}
+
+        onCancel={() => setDialogOpen(false)}
+
+      />
 
     </Box>
+
   );
+
 }

@@ -12,12 +12,11 @@ import {
 } from "@mui/material";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import PetsIcon from "@mui/icons-material/Pets";
 import CoronavirusIcon from "@mui/icons-material/Coronavirus";
 import PeopleIcon from "@mui/icons-material/People";
 import MedicationIcon from "@mui/icons-material/Medication";
 import VaccinesIcon from "@mui/icons-material/Vaccines";
-import EventIcon from "@mui/icons-material/Event";
-import AssessmentIcon from "@mui/icons-material/Assessment";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BackupIcon from "@mui/icons-material/Backup";
 import InfoIcon from "@mui/icons-material/Info";
@@ -40,6 +39,12 @@ export default function Sidebar() {
   const { perfil } = useAuth();
 
   const menuCadastro = [
+
+    {
+      texto: "Plantel",
+      rota: "/plantel",
+      icone: <PetsIcon />,
+    },
 
     {
       texto: "Doenças",
@@ -99,15 +104,10 @@ export default function Sidebar() {
       .map(item => (
 
         <ListItemButton
-
           key={item.rota}
-
           component={Link}
-
           to={item.rota}
-
           selected={location.pathname === item.rota}
-
         >
 
           <ListItemIcon>
@@ -116,11 +116,7 @@ export default function Sidebar() {
 
           </ListItemIcon>
 
-          <ListItemText
-
-            primary={item.texto}
-
-          />
+          <ListItemText primary={item.texto} />
 
         </ListItemButton>
 
@@ -131,37 +127,26 @@ export default function Sidebar() {
   return (
 
     <Drawer
-
       variant="permanent"
-
       sx={{
         width: drawerWidth,
         flexShrink: 0,
 
         "& .MuiDrawer-paper": {
-
           width: drawerWidth,
           boxSizing: "border-box",
-
           borderRight: "1px solid #E0E0E0",
-
         },
       }}
-
     >
 
       <Toolbar>
 
         <Typography
-
           variant="h6"
-
           fontWeight="bold"
-
         >
-
           {APP_NAME}
-
         </Typography>
 
       </Toolbar>
@@ -171,13 +156,9 @@ export default function Sidebar() {
       <List>
 
         <ListItemButton
-
           component={Link}
-
           to="/dashboard"
-
           selected={location.pathname === "/dashboard"}
-
         >
 
           <ListItemIcon>
@@ -186,11 +167,7 @@ export default function Sidebar() {
 
           </ListItemIcon>
 
-          <ListItemText
-
-            primary="Dashboard"
-
-          />
+          <ListItemText primary="Dashboard" />
 
         </ListItemButton>
 
@@ -199,17 +176,13 @@ export default function Sidebar() {
       <Divider />
 
       <List
-
         subheader={
-
           <ListSubheader>
 
             Cadastros
 
           </ListSubheader>
-
         }
-
       >
 
         {renderMenu(menuCadastro)}
@@ -219,17 +192,13 @@ export default function Sidebar() {
       <Divider />
 
       <List
-
         subheader={
-
           <ListSubheader>
 
             Administração
 
           </ListSubheader>
-
         }
-
       >
 
         {renderMenu(menuAdministracao)}
@@ -243,11 +212,8 @@ export default function Sidebar() {
       <Box sx={{ p: 2 }}>
 
         <Typography
-
           variant="caption"
-
           color="text.secondary"
-
         >
 
           {APP_NAME}
@@ -257,11 +223,8 @@ export default function Sidebar() {
         <br />
 
         <Typography
-
           variant="caption"
-
           color="text.secondary"
-
         >
 
           Versão {APP_VERSION}

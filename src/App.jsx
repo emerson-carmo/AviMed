@@ -1,25 +1,49 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Plantel from "./pages/Plantel";
 import Doencas from "./pages/Doencas";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
-
 import MainLayout from "./layouts/MainLayout";
 
 export default function App() {
   return (
     <BrowserRouter>
+
       <Routes>
 
         <Route
           path="/"
-          element={<Navigate to="/doencas" replace />}
+          element={<Navigate to="/dashboard" replace />}
         />
 
         <Route
           path="/login"
           element={<Login />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/plantel"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <Plantel />
+              </MainLayout>
+            </ProtectedRoute>
+          }
         />
 
         <Route
@@ -35,10 +59,11 @@ export default function App() {
 
         <Route
           path="*"
-          element={<Navigate to="/" replace />}
+          element={<Navigate to="/dashboard" replace />}
         />
 
       </Routes>
+
     </BrowserRouter>
   );
 }
