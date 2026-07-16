@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import Plantel from "./pages/Plantel";
 import Doencas from "./pages/Doencas";
 import HistoricoClinico from "./pages/HistoricoClinico";
+import FichaAve from "./pages/FichaAve";
 
 import ProtectedRoute from "./Auth/ProtectedRoute";
 import MainLayout from "./layouts/MainLayout";
@@ -50,6 +51,18 @@ export default function App() {
           }
         />
 
+        {/* Ficha da Ave */}
+        <Route
+          path="/plantel/:id"
+          element={
+            <ProtectedRoute>
+              <MainLayout>
+                <FichaAve />
+              </MainLayout>
+            </ProtectedRoute>
+          }
+        />
+
         {/* Doenças */}
         <Route
           path="/doencas"
@@ -74,7 +87,7 @@ export default function App() {
           }
         />
 
-        {/* Página inexistente */}
+        {/* Página não encontrada */}
         <Route
           path="*"
           element={<Navigate to="/dashboard" replace />}

@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   Box,
@@ -14,6 +15,7 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 
 import SearchIcon from "@mui/icons-material/Search";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -22,6 +24,8 @@ export default function TabelaPlantel({
   onEditar,
   onExcluir,
 }) {
+
+  const navigate = useNavigate();
 
   const [pesquisa, setPesquisa] = useState("");
 
@@ -75,11 +79,8 @@ export default function TabelaPlantel({
       renderCell: ({ value }) => (
 
         <Chip
-
           label={value}
-
           size="small"
-
           color={
             value === "ATIVA"
               ? "success"
@@ -87,7 +88,6 @@ export default function TabelaPlantel({
               ? "warning"
               : "error"
           }
-
         />
 
       ),
@@ -97,12 +97,23 @@ export default function TabelaPlantel({
     {
       field: "acoes",
       headerName: "Ações",
-      width: 120,
+      width: 170,
       sortable: false,
 
       renderCell: ({ row }) => (
 
         <>
+
+          <Tooltip title="Visualizar">
+
+            <IconButton
+              color="primary"
+              onClick={() => navigate(`/plantel/${row.id}`)}
+            >
+              <VisibilityIcon />
+            </IconButton>
+
+          </Tooltip>
 
           <Tooltip title="Editar">
 
@@ -159,7 +170,6 @@ export default function TabelaPlantel({
         value={pesquisa}
         onChange={(e) => setPesquisa(e.target.value)}
         sx={{ mb: 2 }}
-
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -167,19 +177,14 @@ export default function TabelaPlantel({
             </InputAdornment>
           ),
         }}
-
       />
 
       <Box sx={{ height: 520 }}>
 
         <DataGrid
-
           rows={linhas}
-
           columns={colunas}
-
-          pageSizeOptions={[10,20,50]}
-
+          pageSizeOptions={[10, 20, 50]}
           initialState={{
             pagination: {
               paginationModel: {
@@ -187,13 +192,10 @@ export default function TabelaPlantel({
               },
             },
           }}
-
           disableRowSelectionOnClick
-
           localeText={{
             noRowsLabel: "Nenhuma ave cadastrada",
           }}
-
         />
 
       </Box>
